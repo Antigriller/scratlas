@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500" version="1.0">
+  <path style="fill:#fcdd09;fill-opacity:1" d="M0 0h500v500H0z"/>
+  <path style="fill:#da121a;fill-opacity:1" d="M0 55.5625v55.5625h500V55.5625H0zm0 111.09375v55.5625h500v-55.5625H0zm0 111.125v55.5625h500v-55.5625H0zM0 388.875v55.5625h500V388.875H0z"/>
+  <path style="fill:#fff;fill-opacity:1;fill-rule:evenodd;stroke:#fcdd09;stroke-width:5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" d="M249.38017 24.999979 25.000001 248.1405 248.1405 475.00002 475 248.1405 249.38017 24.999979z"/>
+  <path style="opacity:1;fill:#da121a;fill-opacity:1;fill-rule:nonzero;stroke:#fcdd09;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;marker:none;marker-start:none;marker-mid:none;marker-end:none;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;visibility:visible;display:inline;overflow:visible;enable-background:accumulate" d="M222.21875 52v170.21875H51.0625L25 248.125l29.15625 29.65625h168.0625V448.625L248.15625 475l29.625-29.625V277.78125h167.5625L475 248.125l-26.1875-25.90625H277.78125v-169.125L249.375 25l-27.15625 27z"/>
+</svg>

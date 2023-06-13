@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+	<style type="text/css">
+		/*@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');*/
+		html, body{
+			margin: 0;
+			padding: 0;
+		}
+		body {
+			font-family: 'PT Sans', sans-serif;
+			background: #222;
+		}
+		#page{
+			display: flex;
+		}
+		#map {
+			display: block;
+			margin-left: auto;
+			margin-right: auto;
+		}
+		aside{
+			background: #333;
+			color: #FFF;
+			overflow: auto;
+		}
+		button{
+			cursor: pointer;
+		}
+		@media (max-width: 1000px){
+			#page{
+				display: flex;
+				flex-flow: row wrap-reverse;
+			}
+			aside{
+				width: 100%;
+			}
+			#map{
+				max-width: 100%;
+			}
+		}
+		@media (min-width: 1001px){
+			#page{
+				display: flex;
+				height: calc(100vh - 5rem);
+			}
+			aside{
+				min-width: 24rem;
+				width: 24rem;
+			}
+			#map{
+				max-width: calc(100% - 24rem);
+			}
+		}
+		button, select, input[type="search"], #popup{
+			border-radius: 0.5rem;
+			background: transparent;
+			color: #FFF;
+			border: 2px solid white;
+		}
+		input[type="search"]{
+			width: 100%;
+			font-size: 1.4rem;
+			margin: 0.5rem 0;
+		}
+		select{
+			font-size: 2rem;
+			display: inline-block;
+		}
+		option{
+			background: #333;
+		}
+		header{
+			display: flex;
+			justify-content: space-between;
+			padding: 1rem;
+		}
+		h1{
+			margin: 0;
+			display: inline-block;
+			font-size: 2rem;
+			line-height: 3rem;
+			color: white;
+			font-family: 'PT Sans Caption', sans-serif;
+		}
+		nav button{
+			font-size: 1.2rem;
+			border: none;
+			font-family: 'PT Sans Caption';
+			font-weight: bold;
+			border-radius: 0;
+		}
+		nav button.clicked{
+			background: #FFF;
+			color: #000;
+		}
+		nav button:hover{
+			text-decoration: underline;
+		}
+		nav button:disabled{
+			opacity: 0.25;
+		}
+		.activity{
+			padding: 0.5rem;
+		}
+		#regFlag{
+			width: 4rem;
+			height: 4rem;
+			border-radius: 0.5rem;
+			margin: 0.5rem;
+			float: left;
+			background-position: center;
+			background-size: cover;
+		}
+		.listFlag{
+			width: 3rem;
+			height: 3rem;
+			border-radius: 0.5rem;
+			margin-right: 0.5rem;
+			float: left;
+			background-position: center;
+			background-size: cover;
+		}
+		.listColor{
+			width: 2rem;
+			height: 2rem;
+			border-radius: 0.5rem;
+			margin-right: 0.5rem;
+			float: left;
+		}
+		#regId{
+			padding-top: 0.5rem;
+			font-size: 0.8rem;
+		}
+		#regTitle{
+			/*padding-bottom: 1.5rem;*/
+			font-size: 1.4rem;
+		}
+		#regStatusInput{
+			width: 80%;
+			margin: 0 10%;
+		}
+		#regStatus{
+			font-weight: bold;
+			text-align: center;
+			font-size: 1.4rem;
+			font-variant: small-caps;
+		}
+		#regMapLink, #worldMapLink, #popup button{
+			font-size: 1.4rem;
+			padding: 0.5rem;
+			margin: 0.5rem 0;
+		}
+		#regMapLink:hover, #worldMapLink:hover{
+			background: #444;
+		}
+		#popup button{
+			margin: 0.5rem;
+		}
+		#popup button:hover{
+			background: #555;
+		}
+		.listTitle{
+			font-size: 1.2rem;
+		}
+		.listId{
+			font-size: 0.8rem;
+			line-height: 1;
+		}
+		.listStatus{
+			font-size: 0.8rem;
+			opacity: 0.5;
+			text-align: right;
+			line-height: 1;
+		}
+		.mapContentItem{
+			clear: left;
+			padding: 0.5rem;
+			min-height: 3rem;
+			cursor: pointer;
+			border-radius: 0.5rem;
+		}
+		.mapContentItem:hover, label:hover, #activityData button:hover, .achievement:hover{
+			background: #444;
+		}
+		#activityAchievements div{
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+			align-content: flex-start;
+		}
+		.achievement{
+			border-radius: 0.5rem;
+			flex: 0 1 auto;
+			width: 6rem;
+			padding: 0.5rem;
+			position: relative;
+		}
+		.achIcon, #popupImage{
+			border-radius: 0.5rem;
+		}
+		#popupImage{
+			display: inline-block;
+			width: fit-content;
+		}
+		.achIcon{
+			width: 6rem;
+			height: 6rem;
+		}
+		#popupImage{
+			
+			height: 18rem;
+		}
+		.achIcon img{
+			width: 5rem;
+			height: 5rem;
+			padding: 0.5rem;
+		}
+		#popupImage img{
+			width: 15rem;
+			height: 15rem;
+			padding: 1.5rem;
+		}
+		.achTitle{
+			text-align: center;
+			font-weight: bold;
+		}
+		.achDescription{
+			text-align: center;
+			font-size: 0.8rem;
+			opacity: 0.5;
+			font-style: italic;
+		}
+		.achLevel{
+			font-variant: small-caps;
+			font-size: 0.8rem;
+		}
+		.achXp{
+			font-weight: bold;
+			font-size: 0.6rem;
+			opacity: 0.5;
+			font-style: italic;
+			position: absolute;
+			right: 0;
+			top: 0;
+		}
+
+		input[type="radio"] {
+			display: none;
+		}
+		label, #activityData button {
+			clear: left;
+			display: block;
+			border-radius: 0.5rem;
+			font-size: 1.5rem;
+			padding: 0.5rem;
+			cursor: pointer;
+		}
+		input:checked + label{
+			background: #555;
+		}
+
+		input[type="file"] {
+			display: none;
+		}
+		input[type="file"] + label{
+			padding: 1rem;
+			margin: 0.4rem;
+			font-size: 1.6rem;
+			font-weight: 700;
+			color: white;
+			border: 2px dashed white;
+			display: inline-block;
+		}
+		
+		.starsZone svg{
+			margin: 0.2rem;
+			width: 1.4rem;
+			height: 1.4rem;
+			fill: gold;
+		}
+
+		#pointsCounter{
+			text-align: center;
+			font-size: 1.4rem;
+		}
+		h2{
+			margin: 0;
+		}
+		.statsTable{
+			display: flex;
+			flex-flow: row wrap;
+			justify-content: center;
+			align-content: flex-start;
+		}
+		.statsRound{
+			font-size: 1.4rem;
+			line-height: 1.6;
+			text-align: center;
+			width: 2.2rem;
+			height: 2.2rem;
+			padding: 0.4rem;
+			margin: 0.4rem;
+			border: 2px solid white;
+			border-radius: 50%;
+		}
+		.statsLabel{
+			text-align: center;
+			font-variant: small-caps;
+		}
+
+		#popupContainer{
+			position: fixed;
+			width: 100%;
+			height: 100vh;
+			backdrop-filter: blur(10px);
+			z-index: 1;
+		}
+		#popup{
+			position: relative;
+			background: #444;
+			width: 80%;
+			max-height: 80vh;
+			margin: 10vh 10%;
+			padding: 0.5rem;
+			text-align: center;
+		}
+		#popup > {
+			display: inline-block;
+			width: 100%;
+		}
+		#popupHeader{
+			font-weight: bold;
+			font-size: 2rem;
+			margin-bottom: 0.5rem;
+		}
+		#popupTitle{
+			font-weight: bold;
+			font-size: 1.4rem;
+		}
+		#popupDescription{
+			font-size: 1.2rem;
+			font-style: italic;
+		}
+		#activityData button{
+			border: none;
+			text-align: left;
+			width: 100%;
+		}
+		
+		.starsZone > svg:nth-child(1){
+			fill: chocolate;
+		}
+		.starsZone > svg:nth-child(2){
+			fill: silver;
+		}
+		.starsZone > svg:nth-child(3){
+			fill: gold;
+		}
+		.progressBar{
+			background: #222;
+			height: 2rem;
+			width: 100%;
+			display: flex;
+			flex-flow: row-reverse nowrap;
+		}
+		.progressBar div {
+			display: inline-block;
+			height: 100%;
+		}
+		#progressLabels{
+			width: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="popupContainer" style="display: none;">
+		<div id="popup">
+		</div>
+	</div>
+	<header>
+		<h1>🌰 Scratlas</h1>
+		<select name="maps" id="mapsSelect"></select>
+	</header>
+	
+	<div id="page">
+<aside>
+	<nav>
+		<button type="button" id="buttonMap" data-activity="map">Map</button>
+		<button type="button" id="buttonRegion" data-activity="region" disabled>Region</button>
+		<button type="button" id="buttonStats" data-activity="stats">Stats</button>
+		<button type="button" id="buttonAchievements" data-activity="achievements">Achievements</button>
+		<button type="button" id="buttonStyle" data-activity="style">Style</button>
+		<button type="button" id="buttonData" data-activity="data">Data</button>
+	</nav>
+	<div id="activityMap" class="activity" data-activity="map">
+		<button type="button" id="worldMapLink" style="display:none">< Back to the world map</button>
+		<input type="search" name="">
+		<div id="mapContentList"></div>
+	</div>
+	<div id="activityRegion" class="activity" data-activity="region">
+		<div id="regFlag"></div>
+		<div id="regId">ID</div>
+		<div id="regTitle">Title</div>
+		<br>
+		<input type="range" id="regStatusInput" name="regStatusInput" min="0" max="5" step="1" value="0">
+		<div id="regStatus">Status</div>
+		<div id="regStatusDescription">
+			<p><b>Not been</b>: you never been at this region.</p>
+			<p><b>Passed</b>: you passed by this region by the car, train, plane and saw it from the window.</p>
+			<p><b>Stopped</b>: you stopped here for example for transfer in airport or for buy an belyash at railway station.</p>
+			<p><b>Visited</b>: you walked the streets at this region, been here on excursion or on business.</p>
+			<p><b>Stayed</b>: you stayed here at least one night for sleep.</p>
+			<p><b>Lived</b>: there is or was your home.</p>
+		</div>
+		<button type="button" id="regMapLink">Map of this region ></button>
+	</div>
+	<div id="activityStats" class="activity" data-activity="stats">
+		<div id="pointsCounter"></div>
+			<h2>Total regions</h2>
+			<div class="statsTable" id="statsTotal"></div>
+			<h2>Countries</h2>
+			<div class="statsTable" id="statsCountries"></div>
+			<h2>Subdivisions</h2>
+			<div class="statsTable" id="statsRegions"></div>
+			<h2>On this map</h2>
+			<div class="statsTable" id="statsMap">
+				<div class="progressBar">
+					<div id="progress0"></div>
+					<div id="progress1"></div>
+					<div id="progress2"></div>
+					<div id="progress3"></div>
+					<div id="progress4"></div>
+					<div id="progress5"></div>
+				</div>
+				<div id="progressLabels">
+				</div>
+			</div>
+	</div>
+	<div id="activityAchievements" class="activity" data-activity="achievements"><div></div></div>
+	<div id="activityStyle" class="activity" data-activity="style">
+		<form name="style">
+			<input type="radio" id="style0" name="style" value="0"><label for="style0">Red</label>
+			<input type="radio" id="style1" name="style" value="339"><label for="style1">Pink</label>
+			<input type="radio" id="style2" name="style" value="288"><label for="style2">Grape</label>
+			<input type="radio" id="style3" name="style" value="255"><label for="style3">Violet</label>
+			<input type="radio" id="style4" name="style" value="230"><label for="style4">Indigo</label>
+			<input type="radio" id="style5" name="style" value="208"><label for="style5">Blue</label>
+			<input type="radio" id="style6" name="style" value="188"><label for="style6">Cyan</label>
+			<input type="radio" id="style7" name="style" value="162"><label for="style7">Teal</label>
+			<input type="radio" id="style8" name="style" value="131"><label for="style8">Green</label>
+			<input type="radio" id="style9" name="style" value="85"><label for="style9">Lime</label>
+			<input type="radio" id="style10" name="style" value="39"><label for="style10">Yellow</label>
+			<input type="radio" id="style11" name="style" value="24"><label for="style11">Orange</label>
+		</form>
+	</div>
+	<div id="activityData" class="activity" data-activity="data">
+		<button type="button" id="exportDataButton">&#11180;&#9;Export your data</button>
+		<button type="button" id="importDataButton">&#11182;&#9;Import your data</button>
+		<button type="button" id="clearDataButton">&#128472;&#9;Clear map</button>
+	</div>
+</aside>
+<object id="map" data="maps/world.svg" type="image/svg+xml"></object>
+</div>
+<script type="text/javascript">
+	var mapsList = ["world","africa","europe","afghanistan","albania","algeria","andorra","angola","anguilla","antigua-and-barbuda","argentina","armenia","aruba","australia","austria","azerbaijan","bahamas","bahrain","bangladesh","barbados","belarus","belgium","belize","benin","bermuda","bhutan","bolivia","bosnia-herzegovina","bosnia-herzegovina-2","botswana","botswana-2","brazil","british-virgin-islands","brunei-darussalam","bulgaria","burkina-faso","burkina-faso-2","burundi","cambodia","cameroon","canada","cape-verde","cayman-islands","central-african-republic","chad","chile","chile-2","china","colombia","comoros","congo","congo-dr","costa-rica","croatia","cuba","curaçao","cyprus","czech-republic","côte-d'ivoire","democratic-republic-of-congo","denmark","djibouti","dominica","dominican-republic","ecuador","egypt","el-salvador","equatorial-guinea","eritrea","estonia","ethiopia","falkland-islands","faroe-islands","faroeislands","fiji","finland","france","france-2","france-departments","france-new","french-polynesia","gabon","gambia","georgia","germany","ghana","greece","greenland","grenada","guatemala","guinea","guinea-2","guinea-bissau","guyana","haiti","honduras","hong-kong","hungary","iceland","india","indonesia","iran","iraq","ireland","israel","italy","italy-2","ivory-coast","jamaica","japan","jordan","kazakhstan","kenya","kosovo","kuwait","kyrgyzstan","laos","laos","latvia","lebanon","lesotho","liberia","libya","liechtenstein","lithuania","luxembourg","macedonia","madagascar","malawi","malaysia","maldives","mali","malta","malta-2","mauritania","mauritius","mexico","moldova","mongolia","montenegro","montserrat","morocco","mozambique","myanmar","namibia","nauru","nepal","netherlands","new-caledonia","new-zealand","nicaragua","niger","nigeria","north-korea","norway","oman","pakistan","palestine","palestinian-territories","panama","papua-new-guinea","paraguay","peru","philippines","pitcairn-islands","poland","portugal","portugal-regions","puerto-rico","qatar","republic-of-congo","romania","russia","rwanda","saint-kitts-and-nevis","saint-lucia","saint-martin","saint-vincent-and-the-grenadines","san-marino","sao-tome-and-principe","saudi-arabia","senegal","serbia","serbia-without-kosovo","seychelles","sierra-leone","singapore","slovakia","slovenia","slovenia-2","solomon-islands","somalia","south-africa","south-africa-2","south-africa-3","south-korea","south-sudan","spain","spain-2","spain-provinces","sri-lanka","sudan","suriname","swaziland","sweden","switzerland","syria","taiwan","taiwan-2","tajikistan","tajikistan-2","tanzania","thailand","togo","tonga","trinidad-and-tobago","tunisia","turkey","turkmenistan","turks-and-caicos-islands","uganda","ukraine","united-arab-emirates","united-kingdom","united-kingdom-2","united-kingdom-counties","united-states","uruguay","us-virgin-islands","uzbekistan","vanuatu","venezuela","vietnam","vietnam-with-islands","western-sahara","yemen","zambia","zimbabwe"];
+	var obj = document.querySelector("#map");
+	var stats = {}
+	var regions = undefined;
+	var states = ['not been','passed','stopped','visited','stayed','lived']
+	var selectedRegion = undefined;
+	var mapsSelect = document.querySelector("#mapsSelect");
+	for (const m in mapsList) {
+		var optElm = document.createElementNS("http://www.w3.org/1999/xhtml", "option");
+		optElm.setAttribute("value", mapsList[m]);
+		optElm.textContent = mapsList[m];
+		mapsSelect.appendChild(optElm);
+	}
+	mapsSelect.addEventListener('change', (e) => {
+		obj.setAttribute("data", `maps/${mapsSelect.value}.svg`);
+		document.querySelector("#buttonMap").dispatchEvent(new Event ('click', {"bubbles": true}));
+		worldMapLink.style.display = 'block';
+		document.querySelector("#buttonRegion").disabled = true;
+	});
+	var regStatusInput = document.querySelector("#regStatusInput");
+	var regStatus = document.querySelector("#regStatus");
+	var regTitle = document.querySelector("#regTitle");
+	var regId = document.querySelector("#regId");
+	var regMapLink = document.querySelector("#regMapLink");
+	var worldMapLink = document.querySelector("#worldMapLink");
+	var regFlag = document.querySelector("#regFlag");
+	var nav = document.querySelector("nav");
+	var searchInput = document.querySelector("input[type='search']");
+	var mapContentList = document.querySelector('#mapContentList');
+	var activityStyle = document.querySelector('#activityStyle');
+	var activityAchievements = document.querySelector('#activityAchievements');
+	var header = document.querySelector('header');
+	var popupContainer = document.querySelector('#popupContainer');
+	var importDataButton = document.querySelector('#importDataButton');
+	var exportDataButton = document.querySelector('#exportDataButton');
+	var clearDataButton = document.querySelector('#clearDataButton');
+	var countriesList = {};
+	var achievementTitles = {
+		'a_l': {
+			'1': "Lovely view of",
+			'2': "Ready to go around",
+			'3': "Ready to explore",
+			'4': "Explorer of",
+			'5': "Your dream home -",
+		},
+		'a_c': {
+			'1': "Love to travel",
+			'2': "Lets fly away",
+			'3': "Ready to travel",
+			'4': "Lets explore",
+			'5': "Lets go home",
+		},
+		'a_r': {
+			'1': "Choose the way",
+			'2': "Happy journey",
+			'3': "Explore the world",
+			'4': "Lovely memories",
+			'5': "Welcome home",
+		},
+	}
+	var star = `
+	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+  <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+</svg>
+	`;
+	regStatusInput.addEventListener('change', (e) => {
+		var status = states[e.target.value]
+		regStatus.textContent = status;
+		if (e.target.value == 0) {
+			localStorage.removeItem('r_'+selectedRegion.getAttribute('id'));
+			selectedRegion.setAttribute('class', '');
+		} else {
+			localStorage.setItem('r_'+selectedRegion.getAttribute('id'), e.target.value);
+			selectedRegion.setAttribute('class', status);
+		}
+		updateAchievements();
+		showAchievements();
+		updateMap(); //Рационально ли?
+		updateStats();
+		//document.querySelector('#pointsCounter').textContent = `${calculatePoints()} points`;
+		searchOnMap(searchInput.value); //Для обновления статусов региона в списке
+	});
+
+	nav.addEventListener('click', (e) => {
+		let buttons = document.querySelectorAll("nav button");
+		for (b of buttons) {
+			b.removeAttribute("class");
+		}
+		e.target.setAttribute("class", "clicked")
+		let activities = document.querySelectorAll(".activity");
+		for (a of activities) {
+			a.style.display = (e.target.dataset.activity == a.dataset.activity) ? "block" : "none";
+		}
+	});
+	document.querySelector("#buttonMap").dispatchEvent(new Event ('click', {"bubbles": true}));
+
+	mapContentList.addEventListener('click', (e) => {
+		e.path = e.composedPath();
+		for (el of e.path){
+			if (el.className == "mapContentItem") {
+				obj.contentDocument.querySelector(`#${el.dataset.region}`).dispatchEvent(new Event('click', {"bubbles":true}));
+				break;
+			}
+		}
+	});
+	searchInput.addEventListener('input', (e) => {
+		searchOnMap(searchInput.value);
+	});
+
+	activityStyle.addEventListener('click', (e) => {
+		let color = document.forms.style.style.value
+		localStorage.setItem('s_color', color);
+		updateStyle();
+	});
+
+	activityAchievements.addEventListener('click', (e) => {
+		e.path = e.composedPath();
+		for (el of e.path){
+			if (el.className == "achievement") {
+				let achTitle = el.querySelector('.achTitle').textContent;
+				let achDescription = el.querySelector('.achDescription').textContent;
+				let achXp = el.querySelector('.achXp').textContent;
+				let achLevel = el.querySelector('.achLevel').textContent;
+				let achIcon = el.querySelector('.achIcon');
+				let achIconImg = achIcon.innerHTML;
+				let achIconStyle = achIcon.getAttribute('style');
+				let achStarsZone = el.querySelector('.starsZone').innerHTML;
+				//console.log(achTitle)
+				showPopup(
+					header = "Your achievement",
+					content = `
+					<div id="popupLevel">${achLevel}</div>
+					<div class="starsZone">${achStarsZone}</div>
+					<div id="popupImage" style="${achIconStyle}">${achIconImg}</div>
+					<div id="popupTitle">${achTitle}</div>
+					<div id="popupDescription">You ${achDescription} and earned ${achXp}!</div>
+					`,
+					);
+				break;
+			}
+		}
+		//console.log(e)
+	});
+
+	importDataButton.addEventListener('click', (e) => {
+		showPopup(
+			header = "Let`s import your data",
+			content = `
+			<input type="file" id="fileUpload" onchange="uploadData(this.files[0])">
+			<label for="fileUpload">Choose a file</label>
+			<div id="popupDescription">Load here file "scratlas.json" imported from "Scratlas" on another device. Warning: current data will be raplaced with loaded. Make sure that file has not been changed manually after downloading. I take no responsibility if your device explodes caused by incorrect data... O_o</div>
+			`,
+			);
+	});
+	exportDataButton.addEventListener('click', (e) => {
+		showPopup(
+			header = "Let`s export your data",
+			content = `
+			<button id="fileDownload" onclick="downloadData()">Download data</button>
+			<div id="popupDescription">Click on button to download your data as file. U can use it as backup or for transfering data to another device.</div>
+			`,
+			);
+	});
+	clearDataButton.addEventListener('click', (e) => {
+		showPopup(
+			header = "Really?",
+			content = `
+			<div id="popupDescription">Are you sure to delete all your history of visitings and beautiful achievements from this device? If you saved it as file it woold be possible to recover saved data.</div>
+			<button>No, let it remain</button><button onclick="deleteData();location.reload();">Yes, delete it</button>
+			`,
+			);
+	});
+	function deleteData() {
+		localStorage.clear();
+	}
+	function downloadData() {
+		var jsonData = {};
+		Object.keys(localStorage).forEach(function(key){
+			jsonData[key] = localStorage[key];
+		});
+		function download(content, fileName, contentType) {
+		    var a = document.createElement("a");
+		    var file = new Blob([content], {type: contentType});
+		    a.href = URL.createObjectURL(file);
+		    a.download = fileName;
+		    a.click();
+		}
+		download(JSON.stringify(jsonData), 'scratlas.json', 'application/json');
+	}
+	function uploadData(file) {
+		console.log(file);
+		let reader = new FileReader();
+		reader.readAsText(file);
+
+		reader.onload = function() {
+			deleteData();
+			let textResult = reader.result;
+			let jsonResult = JSON.parse(textResult);
+			console.log(jsonResult);
+			Object.keys(jsonResult).forEach(function(key){
+				localStorage.setItem(key, jsonResult[key])
+			});
+			location.reload();
+		}
+		reader.onerror = function() {
+			console.log(reader.error);
+		}
+		
+	}
+
+	popupContainer.addEventListener('click', (e) => {
+		popupContainer.style.display = 'none';
+	});
+
+	worldMapLink.onclick = function() {
+		mapsSelect.value = 'world';
+		mapsSelect.dispatchEvent(new Event('change'));
+		//document.querySelector("#buttonMap").dispatchEvent(new Event('click', {"bubbles":true}));
+		worldMapLink.style.display = 'none';
+	}
+
+	function setSvgSize(svg){
+		var w = svg.getAttribute("width");
+		var h = svg.getAttribute("height");
+		svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+		svg.removeAttribute("width");
+		svg.removeAttribute("height");
+	}
+	function calculatePoints(){
+		var sum = 0;
+		Object.keys(localStorage).filter(key => key.slice(0,2) != 's_').forEach(function(key){
+			sum += parseInt(localStorage.getItem(key));
+		});
+		return sum;
+	}
+	function updateMap(deep=false) {
+		stats.map = [0,0,0,0,0,0]; // Статистика по карте
+		document.querySelector('#pointsCounter').textContent = `🌰 ${calculatePoints()} points`;
+		for (const r of regions){
+			const id = r.getAttribute('id');
+			const statusCode = localStorage.getItem('r_'+id);
+			countriesList[id] = r.getAttribute('title');
+			if (statusCode == null) {
+				stats.map[0] += 1; // Статистика по карте
+				continue;
+			}
+			stats.map[statusCode] += 1; // Статистика по карте
+			if (deep) {// Действия что нужны лишь при глубоком обновлении карты
+				const status = states[statusCode];
+				r.setAttribute('class', status);
+			}
+		}
+	}
+	function updateStyle() {
+		let color = localStorage.getItem('s_color');
+		if (color == undefined) {
+			var styleButtons = document.querySelectorAll('form input[type="radio"]');
+			const random = Math.floor(Math.random() * styleButtons.length);
+			color = styleButtons[random].value;
+			localStorage.setItem('s_color', color);
+		}
+		try{
+			document.querySelector(`form input[value="${color}"]`).setAttribute("checked",'true');
+		} catch (TypeError){}
+		header.style = `background-image: linear-gradient(45deg, hsl(${parseInt(color)-20}, 70%, 45%), hsl(${parseInt(color)+20}, 70%, 45%));`;
+		var svgDoc = obj.contentDocument;
+		let stylesheet = svgDoc.querySelector('svg > style');
+		stylesheet.innerHTML = `
+		.selected{
+			stroke: hsl(${color}, 100%, 50%);
+		}
+		.passed{
+			fill: hsl(${parseInt(color)-20}, 60%, 70%);
+		}
+		.stopped{
+			fill: hsl(${parseInt(color)-10}, 70%, 70%);
+		}
+		.visited{
+			fill: hsl(${color}, 80%, 70%);
+		}
+		.stayed{
+			fill: hsl(${parseInt(color)+10}, 90%, 70%);
+		}
+		.lived{
+			fill: hsl(${parseInt(color)+20}, 100%, 70%);
+		}
+		`
+	}
+	function parseTitle(title) {
+		if (title == undefined){
+			return;
+		}
+		title = title.toLowerCase();
+		title = title.replaceAll(' ','-');
+		return title;
+	}
+	function searchOnMap(query) {
+		mapContentList.innerHTML = "";
+		for (const r of regions){
+			if(!r.getAttribute('title').toLowerCase().includes(query.toLowerCase()) && !r.getAttribute('id').includes(query.toUpperCase())){
+				continue;
+			}
+			mapContentList.innerHTML += `
+			<div class="mapContentItem" data-region="${r.getAttribute('id')}">
+			<div class="listFlag" style="background-image: url('flags/${r.getAttribute('id')}.svg'), url('flags/${r.getAttribute('id').slice(0,2)}.svg');"></div>
+			<div class="listId">${r.getAttribute('id')}</div>
+			<div class="listTitle">${r.getAttribute('title')}</div>
+			<div class="listStatus">${(r.getAttribute('class') != null) ? r.getAttribute('class') : ''}</div>
+			</div>
+			`;
+		}
+	}
+	function findAchievements(list, type, factor, increment, countryCode='') {
+		for (s in list) {
+			let target = (5-parseInt(s))*factor; //Стартовое количество посещений для текущего уровня ачивки
+			let level = 1;
+			let xp = 10;
+			while (list[s] >= target) {
+				let achievement = `a_${type}-${parseInt(s)+1}-${level}-${target}${countryCode}`;
+				if (localStorage.getItem(achievement) == null) {
+					localStorage.setItem(achievement, xp)
+					// Тут надо привязать окно нового достижения
+					let data = achievement.split('-');
+					let types = {
+						'a_l': 'regions of',
+						'a_c': 'countries',
+						'a_r': 'regions around the world',
+					}
+					showPopup(
+						title = 'Wow, you received new achievement!',
+						content = `
+							<div id="popupLevel">Level ${data[2]}</div>
+							<div class="starsZone">${star.repeat(data[2])}</div>
+							<div id="popupImage" style="background-image: ${data[4] == undefined ? gradientBackground() : 'url(flags/'+data[4]+'.svg)'};"><img src="achievement-stickers/${data[0]}-${data[1]}.svg"></div>
+							<div id="popupTitle">${achievementTitles[data[0]][data[1]]} ${data[4] == undefined ? '' : countriesList[data[4]]}</div>
+							<div id="popupDescription">You ${states[data[1]]} in ${data[3]} ${types[data[0]]} ${data[4] == undefined ? '' : countriesList[data[4]]} and earned ${xp} xp!</div>
+						`,
+						);
+				}
+				target *= increment;
+				xp *= 10;
+				level ++;
+			}
+		}
+	}
+	function updateStats(){
+		stats.countries = [0,0,0,0,0];
+		stats.regions = [0,0,0,0,0];
+		stats.total = [0,0,0,0,0];
+		stats.local = {};
+		Object.keys(localStorage).filter(key => key.slice(0,2) == 'r_').forEach(function(key){
+			let item = localStorage.getItem(key);
+			let value = parseInt(item);
+			while (value > 0){
+				stats.total[value-1] += 1; // Если это регион (в любом случае это так)
+				if (key[0] == 'r' && key.length == 4) { // Если этот регион - страна
+					stats.countries[value-1] += 1;
+				} else { // Внутренние регионы
+					stats.regions[value-1] += 1;
+					let countryCode = key.slice(2,4);
+					if (stats.local[countryCode] == undefined) {
+						stats.local[countryCode] = [0,0,0,0,0];
+					}
+					stats.local[countryCode][value-1] += 1;
+				}
+				value -= 1;
+			}
+		});
+		var totalElm = document.querySelector("#statsTotal");
+		var countriesElm = document.querySelector("#statsCountries");
+		var regionsElm = document.querySelector("#statsRegions");
+		totalElm.innerHTML = "";
+		countriesElm.innerHTML = "";
+		regionsElm.innerHTML = "";
+		for (var i = 0; i < 5; i++) {
+			totalElm.innerHTML += `<div><div class="statsRound">${stats.total[i]}</div><div class="statsLabel">${states[i+1]}</div></div>`;
+			countriesElm.innerHTML += `<div><div class="statsRound">${stats.countries[i]}</div><div class="statsLabel">${states[i+1]}</div></div>`;
+			regionsElm.innerHTML += `<div><div class="statsRound">${stats.regions[i]}</div><div class="statsLabel">${states[i+1]}</div></div>`;
+		}
+		// Статистика карты
+		var sumStatsOnMap = 0;
+		let color = localStorage.getItem('s_color');
+
+		for (var i in stats.map) {
+			sumStatsOnMap += stats.map[i];	// Чтобы рассчитать проценты
+		}
+		let labs = document.querySelector(`#progressLabels`);
+		labs.innerHTML = '';
+		let sum = 0;
+		let partSum = 0;
+
+		for (var i = stats.map.length - 1; i >= 0; i--) {
+			let el = document.querySelector(`#progress${i}`);
+			let part = (stats.map[i] / sumStatsOnMap) * 100;
+			sum += stats.map[i];
+			partSum += part;
+			let width = `width:${part}%;`;
+			let background = `background:hsl(${parseInt(color)+(i*10)-30}, ${(i*10)+50}%, 70%);`;
+			if (i == 0) {
+				background = `background:#222`;
+				sum = stats.map[i];	// Суммируется все кроме непосещенных
+				partSum = part;
+			}
+			labs.innerHTML += `<label for="progress${i}"><div class="listColor" style="${background}"></div>${states[i]} - ${sum} (${partSum.toFixed(1)}%)</label>`;
+			el.setAttribute('style', `${width}${background}`);
+		}
+	}
+	function updateAchievements() {
+		// Ищем ачивки
+		findAchievements(stats.countries, 'c', 1, 5);
+		findAchievements(stats.regions, 'r', 10, 2);
+		for (s in stats.local){
+			findAchievements(stats.local[s], 'l', 1, 5, `-${s}`);
+		}
+	}
+	function gradientBackground() {
+		var color = parseInt(localStorage.getItem("s_color"));
+		var g1 = `linear-gradient(135deg, hsla(${color-20}, 70%, 65%, 1), hsla(${color+20}, 70%, 65%, 1))`
+		return g1;
+	}
+	function showPopup(header, content){
+		popupContainer.style.display = 'block';
+		document.querySelector('#popup').innerHTML = `
+		<div id="popupHeader">${header}</div>
+		${content}
+		`;
+	}
+	function showAchievements(){
+		var activity = document.querySelector("#activityAchievements div");
+		activity.innerHTML = "";
+		Object.keys(localStorage).filter(key => key.slice(0,2) == 'a_').forEach(function(key){
+			let types = {
+				'a_l': 'regions of',
+				'a_c': 'countries',
+				'a_r': 'regions around the world',
+			}
+			let data = key.split('-');
+			activity.innerHTML += `
+			<div class="achievement">
+			<div class="achXp">+${localStorage[key]} xp</div>
+			<div class="starsZone">${star.repeat(data[2])}</div>
+			<div class="achIcon" style="background-image: ${data[4] == undefined ? gradientBackground() : 'url(flags/'+data[4]+'.svg)'};"><img src="achievement-stickers/${data[0]}-${data[1]}.svg"></div>
+			<div class="achTitle">${achievementTitles[data[0]][data[1]]} ${data[4] == undefined ? '' : countriesList[data[4]]}</div>
+			<div class="achLevel">Level ${data[2]}</div>
+			<div class="achDescription">${states[data[1]]} in ${data[3]} ${types[data[0]]} ${data[4] == undefined ? '' : countriesList[data[4]]}</div>
+			</div>
+			`
+		});
+	}
+	
+	obj.onload = function() {
+		var svgDoc = obj.contentDocument;
+		setSvgSize(svgDoc.querySelector('svg'));
+		svgDoc.addEventListener('click', (e) => {
+			// Выбор элементов тыком
+			let oldSelection = svgDoc.querySelector("path.selected");
+			if (oldSelection != undefined) {
+				selectedRegion.classList.remove("selected");
+			}
+			selectedRegion = e.target;
+			var id = selectedRegion.getAttribute("id");
+			if (id == undefined){
+				document.querySelector("#buttonMap").dispatchEvent(new Event('click', {"bubbles":true}));
+				return;
+			}
+			document.querySelector("#buttonRegion").disabled = false;
+			selectedRegion.classList.add("selected");
+			var title = selectedRegion.getAttribute("title");
+			regTitle.textContent = title;
+			title = parseTitle(title);
+			regId.textContent = id;
+			regFlag.style.backgroundImage = `url(flags/${id}.svg), url(flags/${id.slice(0,2)}.svg)`;
+			document.querySelector("#buttonRegion").dispatchEvent(new Event('click', {"bubbles":true}));
+
+			if (mapsList.includes(title)) {
+				regMapLink.style.visibility = "visible";
+				regMapLink.onclick = function() {
+					mapsSelect.value = title;
+					mapsSelect.dispatchEvent(new Event('change'));
+					//document.querySelector("#buttonMap").dispatchEvent(new Event('click', {"bubbles":true}));
+				}
+			}
+			else{
+				regMapLink.style.visibility = "hidden";
+			}
+			var status = selectedRegion.getAttribute("class").replace('selected','').replace(' ','');
+			if (status != "") {
+				regStatus.innerHTML = status;
+				regStatusInput.value = states.indexOf(status);
+			} else {
+				regStatus.innerHTML = states[0];
+				regStatusInput.value = 0;
+			}
+		});
+		var linkElm = svgDoc.createElementNS("http://www.w3.org/1999/xhtml", "link"); //Static styles
+		linkElm.setAttribute("href", "../my-style.css?v=4");
+		linkElm.setAttribute("type", "text/css");
+		linkElm.setAttribute("rel", "stylesheet");
+		svgDoc.querySelector("svg").appendChild(linkElm);
+
+		var styleElm = svgDoc.createElementNS("http://www.w3.org/1999/xhtml", "style"); //Editable styles
+		svgDoc.querySelector("svg").appendChild(styleElm);
+
+		regions = svgDoc.querySelectorAll('path');
+		updateMap(true);
+		updateStyle();
+		updateStats();
+		showAchievements();
+		searchOnMap("");
+	}
+
+	var styleButtons = document.querySelectorAll('#activityStyle > form > label');
+	for (b of styleButtons){
+		let radioId = b.getAttribute("for");
+		let radioElm = document.querySelector(`#${radioId}`);
+		let hue = radioElm.getAttribute("value");
+		b.innerHTML = `<div class="listColor" style="background: hsl(${hue}, 100%, 50%);"></div>` + b.innerHTML;
+	}
+</script>
+</body>
+</html>

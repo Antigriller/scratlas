@@ -1,0 +1,17 @@
+path{
+	fill: #333;
+	stroke: #555;
+	stroke-width: 0.4px;
+	fill-opacity: 1;
+	stroke-opacity: 0.5;
+	cursor: pointer;
+
+	transition: stroke 1s, fill 1s;
+}
+path:hover{
+	fill-opacity: 0.8;
+	stroke-opacity: 1;
+}
+.selected{
+	stroke-width: 2px;
+}
